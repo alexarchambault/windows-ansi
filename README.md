@@ -32,7 +32,7 @@ boolean isWindows = System.getProperty("os.name")
         .contains("windows");
 ```
 
-Alternatively, when using GraalVM, the following should work too, and has the benefit of simply
+Alternatively, when using Graal native image, the following should work too, and has the benefit of simply
 discarding one of the `if` branches at image generation time:
 ```java
 // requires the org.graalvm.nativeimage:svm dependency,
