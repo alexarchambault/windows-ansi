@@ -8,7 +8,7 @@
 - query the terminal size, and
 - change the console mode so that it accepts ANSI escape codes.
 
-It relies on the [jansi](https://github.com/fusesource/jansi) library to do so, and also works from
+It relies on internals of the [jansi](https://github.com/fusesource/jansi) library to do so, and also works from
 GraalVM native images.
 
 Compared to using [jline](https://github.com/jline/jline3), *windows-ansi* only and solely calls the right
