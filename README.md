@@ -53,7 +53,7 @@ import io.github.alexarchambault.windowsansi.WindowsAnsi;
 boolean success = WindowsAnsi.setup();
 ```
 
-A returned value of `false` means ANSI code aren't supported by the Windows version you're running on.
+A returned value of `false` means ANSI escape codes aren't supported by the Windows version you're running on.
 These are supposed to be supported by Windows 10 build 10586 (Nov. 2015) onwards.
 
 ### Get terminal size
@@ -68,7 +68,7 @@ int height = size.getHeight();
 
 ## License
 
-All files in this repository except `NativeImageFeature.java` can be used either under the
+All files in this repository, except `NativeImageFeature.java`, can be used either under the
 Apache 2.0 license, or the GNU GPL version 2 license, at your convenience.
 
 The `NativeImageFeature.java` file, originally based on a GNU GPL version 2 only file, is licensed only
