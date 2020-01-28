@@ -19,7 +19,7 @@ or [`GetConsoleScreenBufferInfo`](https://docs.microsoft.com/en-us/windows/conso
 
 Add to your `build.sbt`
 ```scala
-libraryDependencies += "io.github.alexarchambault.windows-ansi" % "windows-ansi" % "0.1.0"
+libraryDependencies += "io.github.alexarchambault.windows-ansi" % "windows-ansi" % "0.0.1"
 ```
 
 The latest version is [![Maven Central](https://img.shields.io/maven-central/v/io.github.alexarchambault.windows-ansi/windows-ansi.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.alexarchambault.windows-ansi/windows-ansi).
@@ -65,14 +65,6 @@ WindowsAnsi.Size size = WindowsAnsi.terminalSize();
 int width = size.getWidth();
 int height = size.getHeight();
 ```
-
-## Known issues
-
-For the `jansi.dll` resource to be loaded fine by jansi from a GraalVM native image,
-either the `sun.arch.data.model` or `com.ibm.vm.bitmode` Java property should manually
-be set to `64` prior to calling a `WindowsAnsi` method (so that
-[this method](https://github.com/fusesource/hawtjni/blob/c14fec00b9976ff6b84e62e483d678594a7d3832/hawtjni-runtime/src/main/java/org/fusesource/hawtjni/runtime/Library.java#L167)
-returns a rightful value).
 
 ## License
 
