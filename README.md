@@ -25,14 +25,14 @@ libraryDependencies += "io.github.alexarchambault.windows-ansi" % "windows-ansi"
 The latest version is [![Maven Central](https://img.shields.io/maven-central/v/io.github.alexarchambault.windows-ansi/windows-ansi.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.alexarchambault.windows-ansi/windows-ansi).
 
 The `WindowsAnsi` methods should only be called from Windows. You can check that
-the current application is running on Windows like:
+the current application is running on Windows with:
 ```java
 boolean isWindows = System.getProperty("os.name")
         .toLowerCase(java.util.Locale.ROOT)
         .contains("windows");
 ```
 
-When using GraalVM, the following should work too, and also has the benefit of simply
+Alternatively, when using GraalVM, the following should work too, and has the benefit of simply
 discarding one of the `if` branches at image generation time:
 ```java
 // requires the org.graalvm.nativeimage:svm dependency,
