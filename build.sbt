@@ -43,4 +43,4 @@ lazy val `test-cli` = project
 
 // root project
 skip.in(publish) := true
-
+shared
