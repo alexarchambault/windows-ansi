@@ -1,6 +1,9 @@
 
 # windows-ansi
 
+[![Build status](https://github.com/alexarchambault/windows-ansi/workflows/CI/badge.svg)](https://github.com/alexarchambault/windows-ansi/actions?query=workflow%3ACI)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.alexarchambault.windows-ansi/windows-ansi.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.alexarchambault.windows-ansi/windows-ansi)
+
 *windows-ansi* is a small Java library to setup / interact with a Windows terminal. It allows to
 - query the terminal size, and
 - change the console mode so that it accepts ANSI escape codes.
@@ -13,6 +16,13 @@ Compared to using [jline](https://github.com/jline/jline3), *windows-ansi* only 
 or [`GetConsoleScreenBufferInfo`](https://docs.microsoft.com/en-us/windows/console/getconsolescreenbufferinfo)), lowering the odds of something going wrong when generating or using a GraalVM native image for example.
 
 ## Usage
+
+Add to your `build.sbt`
+```scala
+libraryDependencies += "io.github.alexarchambault.windows-ansi" % "windows-ansi" % "0.1.0"
+```
+
+The latest version is [![Maven Central](https://img.shields.io/maven-central/v/io.github.alexarchambault.windows-ansi/windows-ansi.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.alexarchambault.windows-ansi/windows-ansi).
 
 The `WindowsAnsi` methods should only be called from Windows. You can check that
 the current application is running on Windows like:
