@@ -35,12 +35,6 @@ lazy val jni = project
     )
   )
 
-lazy val `test-cli` = project
-  .settings(
-    shared,
-    skip.in(publish) := true
-  )
-
 // root project
 skip.in(publish) := true
 shared
