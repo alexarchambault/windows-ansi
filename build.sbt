@@ -25,7 +25,7 @@ lazy val shared = Def.settings(
 )
 
 
-lazy val core = project
+lazy val jni = project
   .settings(
     shared,
     name := "windows-ansi",
