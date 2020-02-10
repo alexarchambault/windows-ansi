@@ -35,6 +35,12 @@ lazy val jni = project
     )
   )
 
+lazy val ps = project
+  .settings(
+    shared,
+    name := "windows-ansi-ps"
+  )
+
 // root project
 skip.in(publish) := true
 shared
