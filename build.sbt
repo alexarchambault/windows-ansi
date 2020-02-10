@@ -25,7 +25,7 @@ lazy val shared = Def.settings(
 )
 
 
-lazy val core = project
+lazy val jni = project
   .settings(
     shared,
     name := "windows-ansi",
@@ -35,10 +35,10 @@ lazy val core = project
     )
   )
 
-lazy val `test-cli` = project
+lazy val ps = project
   .settings(
     shared,
-    skip.in(publish) := true
+    name := "windows-ansi-ps"
   )
 
 // root project
