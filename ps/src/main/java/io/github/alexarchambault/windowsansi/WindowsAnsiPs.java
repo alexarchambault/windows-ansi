@@ -45,7 +45,7 @@ public final class WindowsAnsiPs {
 
     // not sure what happens on Windows versions that don't support ANSI mode
     public static void setup() throws InterruptedException, IOException {
-        if (isWindows) {
+        if (isWindows && System.console() != null) {
             PowershellRunner.runScript(script);
         }
     }
