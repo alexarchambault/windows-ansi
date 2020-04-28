@@ -32,7 +32,7 @@ lazy val jni = project
     Mima.settings(),
     libraryDependencies ++= Seq(
       "org.fusesource.jansi" % "jansi" % "1.18",
-      "org.graalvm.nativeimage" % "svm" % "19.3.1" % Provided
+      "org.graalvm.nativeimage" % "svm" % "20.0.0" % Provided
     )
   )
 
