@@ -29,7 +29,6 @@ lazy val jni = project
   .settings(
     shared,
     name := "windows-ansi",
-    Mima.settings(),
     libraryDependencies ++= Seq(
       "org.fusesource.jansi" % "jansi" % "1.18",
       "org.graalvm.nativeimage" % "svm" % "20.0.0" % Provided
@@ -40,7 +39,6 @@ lazy val ps = project
   .settings(
     shared,
     name := "windows-ansi-ps",
-    Mima.settings("0.0.2")
   )
 
 // root project
