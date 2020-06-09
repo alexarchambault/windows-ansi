@@ -30,7 +30,7 @@ jobs:
         java-version: adopt@1.8.0-232
 
     - name: Compile
-      run: csbt test:compile compatibilityCheck
+      run: csbt test:compile evictionCheck compatibilityCheck
 
   publish:
     needs: test
