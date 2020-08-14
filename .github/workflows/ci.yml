@@ -10,25 +10,12 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-
     steps:
-
-    - uses: actions/checkout@v1
-
-    - name: coursier cache
-      uses: actions/cache@v1
-      if: runner.OS == 'Linux'
-      with:
-        path: ~/.cache/coursier
-        key: ${{ runner.OS }}-coursier-cache-${{ hashFiles('**/*.sbt') }} # -${{ hashFiles('project/**.scala') }} (fails for now)
-        restore-keys: |
-          ${{ runner.OS }}-coursier-cache-${{ hashFiles('**/*.sbt') }}-
-          ${{ runner.OS }}-coursier-cache-
-
+    - uses: actions/checkout@v2
+    - uses: alexarchambault/cache-action-test@v3
     - uses: olafurpg/setup-scala@v7
       with:
         java-version: adopt@1.8.0-232
-
     - name: Compile
       run: csbt test:compile evictionCheck compatibilityCheck
 
@@ -36,25 +23,11 @@ jobs:
     needs: test
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
-
     steps:
-
-      - uses: actions/checkout@v1
-
-      - name: coursier cache (Linux)
-        uses: actions/cache@v1
-        if: runner.OS == 'Linux'
-        with:
-          path: ~/.cache/coursier
-          key: ${{ runner.OS }}-coursier-cache-${{ hashFiles('**/*.sbt') }} # -${{ hashFiles('project/**.scala') }} (fails for now)
-          restore-keys: |
-            ${{ runner.OS }}-coursier-cache-${{ hashFiles('**/*.sbt') }}-
-            ${{ runner.OS }}-coursier-cache-
-
+      - uses: actions/checkout@v2
+      - uses: alexarchambault/cache-action-test@v3
       - uses: olafurpg/setup-scala@v7
-
       - uses: olafurpg/setup-gpg@v2
-
       - name: Release
         run: csbt ci-release
         env:
