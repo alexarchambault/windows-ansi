@@ -12,26 +12,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: coursier/cache-action@v3
-    - uses: olafurpg/setup-scala@v7
-      with:
-        java-version: adopt@1.8.0-232
+    - uses: coursier/cache-action@v5
+    - run: .github/scripts/setup.sh
     - name: Compile
-      run: csbt test:compile evictionCheck compatibilityCheck
+      run: sbt test:compile evictionCheck compatibilityCheck
 
   publish:
     needs: test
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: coursier/cache-action@v3
-      - uses: olafurpg/setup-scala@v7
-      - uses: olafurpg/setup-gpg@v2
-      - name: Release
-        run: csbt ci-release
-        env:
-          PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
-          PGP_SECRET: ${{ secrets.PGP_SECRET }}
-          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+    - uses: actions/checkout@v2
+    - uses: coursier/cache-action@v5
+    - run: .github/scripts/setup.sh
+    - uses: olafurpg/setup-gpg@v2
+    - name: Release
+      run: sbt ci-release
+      env:
+        PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
+        PGP_SECRET: ${{ secrets.PGP_SECRET }}
+        SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+        SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
