@@ -5,11 +5,11 @@ set -e
 
 mkdir -p bin
 export PATH="$(pwd)/bin:$PATH"
-echo "::add-path::$(pwd)/bin"
+echo "$(pwd)/bin" >> "$GITHUB_PATH"
 
 eval "$(cs java --jvm 8 --env)"
-echo "::set-env name=JAVA_HOME::$JAVA_HOME"
-echo "::add-path::$JAVA_HOME/bin"
+echo "JAVA_HOME=$JAVA_HOME" >> "$GITHUB_ENV"
+echo "$JAVA_HOME/bin" >> "$GITHUB_PATH"
 
 ./cs install --install-dir bin sbt-launcher:1.2.22
 
