@@ -9,7 +9,7 @@ import java.io.IOException;
 
 @TargetClass(className = "io.github.alexarchambault.windowsansi.WindowsAnsi")
 @Platforms({Platform.DARWIN.class, Platform.LINUX.class})
-final class WindowsAnsiSubstitutions {
+public final class WindowsAnsiSubstitutions {
 
     @Substitute
     public static WindowsAnsi.Size terminalSize() {
