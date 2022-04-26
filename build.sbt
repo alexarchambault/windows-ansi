@@ -31,7 +31,7 @@ lazy val jni = project
     name := "windows-ansi",
     libraryDependencies ++= Seq(
       "org.fusesource.jansi" % "jansi" % "1.18",
-      "org.graalvm.nativeimage" % "svm" % "21.1.0" % Provided
+      "org.graalvm.nativeimage" % "svm" % "21.3.2" % Provided
     )
   )
 
