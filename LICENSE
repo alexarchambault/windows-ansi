@@ -1,6 +1,9 @@
 
 Copyright (c) 2020, Alexandre Archambault. All rights reserved.
- 
+
+Dual Apache-2 / GPLv2 with classpath exception license for the whole code base,
+except for NativeImageFeature.java, only licensed under the GPLv2 with classpath exception
+license.
 
 Licensed under the original license of the code adapted from GraalVM (GNU GPL version 2,
 with classpath exception), which is reproduced below.
