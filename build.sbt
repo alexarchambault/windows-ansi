@@ -53,5 +53,5 @@ lazy val ps = project
 
 // root project
 disablePlugins(MimaPlugin)
-skip.in(publish) := true
+(publish / skip) := true
 shared
