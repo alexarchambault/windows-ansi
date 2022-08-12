@@ -30,7 +30,7 @@ lazy val jni = project
     shared,
     name := "windows-ansi",
     libraryDependencies ++= Seq(
-      "org.fusesource.jansi" % "jansi" % "1.18"
+      "org.fusesource.jansi" % "jansi" % "2.4.0"
     )
   )
 
