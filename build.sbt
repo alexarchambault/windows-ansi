@@ -41,7 +41,7 @@ lazy val `jni-graalvm` = project
     licenses := List("GPL-2.0" -> url("https://opensource.org/licenses/GPL-2.0")),
     name := "windows-ansi-graalvm",
     libraryDependencies ++= Seq(
-      "org.graalvm.nativeimage" % "svm" % "22.2.0" % Provided
+      "org.graalvm.nativeimage" % "svm" % "22.2.0.1" % Provided
     )
   )
 
