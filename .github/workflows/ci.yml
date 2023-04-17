@@ -30,6 +30,9 @@ jobs:
       with:
         jvm: 8
     - uses: olafurpg/setup-gpg@v3
+    - run: .github/scripts/gpg-setup.sh
+      env:
+        PGP_SECRET: ${{ secrets.PUBLISH_SECRET_KEY }}
     - name: Release
       run: sbtn ci-release
       env:
