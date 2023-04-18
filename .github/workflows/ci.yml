@@ -8,7 +8,19 @@ on:
   pull_request:
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: coursier/cache-action@v6
+    - uses: coursier/setup-action@v1.3.0
+      with:
+        jvm: 8
+    - name: Compile
+      run: sbtn test:compile
+
   publish:
+    needs: test
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
