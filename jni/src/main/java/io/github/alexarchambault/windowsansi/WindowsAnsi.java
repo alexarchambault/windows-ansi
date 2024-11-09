@@ -1,7 +1,6 @@
 package io.github.alexarchambault.windowsansi;
 
 import org.fusesource.jansi.internal.Kernel32;
-import org.fusesource.jansi.internal.WindowsSupport;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -31,7 +30,7 @@ public final class WindowsAnsi {
         long console = Kernel32.GetStdHandle(Kernel32.STD_OUTPUT_HANDLE);
         int[] mode = new int[1];
         if (Kernel32.GetConsoleMode(console, mode) == 0)
-            throw new IOException("Failed to get console mode: " + WindowsSupport.getLastErrorMessage());
+            throw new IOException("Failed to get console mode: " + Kernel32.getLastErrorMessage());
         return Kernel32.SetConsoleMode(console, mode[0] | ENABLE_VIRTUAL_TERMINAL_PROCESSING) != 0;
     }
 
