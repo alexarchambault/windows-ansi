@@ -3,11 +3,24 @@ package io.github.alexarchambault.windowsansi;
 import org.fusesource.jansi.internal.Kernel32;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.Locale;
 import java.util.Objects;
 
 public final class WindowsAnsi {
 
     static {
+        // Workaround while we can't benefit from https://github.com/fusesource/jansi/pull/292
+        String arch = System.getProperty("os.arch", "").toLowerCase(Locale.ROOT);
+        if (arch.equals("arm64") || arch.equals("aarch64")) {
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            URL dllUrl = cl.getResource("org/fusesource/jansi/internal/native/Windows/arm64/jansi.dll");
+            URL soUrl = cl.getResource("org/fusesource/jansi/internal/native/Windows/arm64/libjansi.so");
+            if (dllUrl == null && soUrl != null) {
+                System.setProperty("library.jansi.name", "libjansi.so");
+            }
+        }
+
         // Make https://github.com/fusesource/hawtjni/blob/c14fec00b9976ff6b84e62e483d678594a7d3832/hawtjni-runtime/src/main/java/org/fusesource/hawtjni/runtime/Library.java#L167 happy
         if (System.getProperty("com.ibm.vm.bitmode") == null)
             System.setProperty("com.ibm.vm.bitmode", "64");
