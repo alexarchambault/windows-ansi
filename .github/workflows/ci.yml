@@ -6,36 +6,33 @@ on:
     tags:
     - "v*"
   pull_request:
+  workflow_dispatch:
 
 jobs:
-  test:
+  compile:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: coursier/cache-action@v6
-    - uses: coursier/setup-action@v1
-      with:
-        jvm: 8
-    - name: Compile
-      run: sbtn test:compile
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: coursier/setup-action@v1
+        with:
+          jvm: "21"
+      - run: ./mill __.publishLocal
 
-  publish:
-    if: github.event_name == 'push'
+  release:
     runs-on: ubuntu-latest
+    if: github.event_name == 'push'
     steps:
-    - uses: actions/checkout@v4
-    - uses: coursier/cache-action@v6
-    - uses: coursier/setup-action@v1
-      with:
-        jvm: 8
-    - uses: olafurpg/setup-gpg@v3
-    - run: .github/scripts/gpg-setup.sh
-      env:
-        PGP_SECRET: ${{ secrets.PUBLISH_SECRET_KEY }}
-    - name: Release
-      run: sbtn ci-release
-      env:
-        PGP_SECRET: ${{ secrets.PUBLISH_SECRET_KEY }}
-        PGP_PASSPHRASE: ${{ secrets.PUBLISH_SECRET_KEY_PASSWORD }}
-        SONATYPE_USERNAME: ${{ secrets.PUBLISH_USER }}
-        SONATYPE_PASSWORD: ${{ secrets.PUBLISH_PASSWORD }}
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: coursier/setup-action@v1
+        with:
+          jvm: "21"
+      - run: ./mill mill.scalalib.PublishModule/ --sonatypeUri https://s01.oss.sonatype.org/service/local --sonatypeSnapshotUri https://s01.oss.sonatype.org/content/repositories/snapshots
+        env:
+          MILL_PGP_SECRET_BASE64: ${{ secrets.PUBLISH_SECRET_KEY }}
+          MILL_PGP_PASSPHRASE: ${{ secrets.PUBLISH_SECRET_KEY_PASSWORD }}
+          MILL_SONATYPE_USERNAME: ${{ secrets.PUBLISH_USER }}
+          MILL_SONATYPE_PASSWORD: ${{ secrets.PUBLISH_PASSWORD }}
