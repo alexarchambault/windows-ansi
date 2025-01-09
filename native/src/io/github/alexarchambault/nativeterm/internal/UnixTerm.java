@@ -5,8 +5,18 @@ import org.fusesource.jansi.internal.CLibrary;
 
 import static org.fusesource.jansi.internal.CLibrary.*;
 
-public class UnixTerm {
+/**
+ * Utilities to get the terminal size on Linux / Mac
+ */
+public final class UnixTerm {
 
+    private UnixTerm() {}
+
+    /**
+     * Gets the terminal size on Linux / Mac
+     * @param useStdout whether to use stdout or stderr
+     * @return the terminal size
+     */
     public static TerminalSize getSize(boolean useStdout) {
         WinSize sz = new WinSize();
         int fd = useStdout ? STDOUT_FILENO : STDERR_FILENO;

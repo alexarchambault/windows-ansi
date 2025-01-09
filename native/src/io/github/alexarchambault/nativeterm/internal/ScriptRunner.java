@@ -6,8 +6,20 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
+/**
+ * Utilities to run scripts that interact with the terminal
+ */
 public final class ScriptRunner {
 
+    private ScriptRunner() {}
+
+    /**
+     * Runs a PowerShell script
+     * @param script the script to run
+     * @return the output of the script
+     * @throws InterruptedException if the PowerShell sub-process gets interrupted
+     * @throws IOException if anything goes wrong
+     */
     public static String runPowerShellScript(String script) throws InterruptedException, IOException {
 
         String fullScript = "& {\n" +
@@ -50,6 +62,13 @@ public final class ScriptRunner {
         return results.toString();
     }
 
+    /**
+     * Runs {@code tput} in the current terminal
+     * @param s the {@code tput} parameter you're interested in
+     * @return the value of that parameter returned by {@code tput}, as an integer
+     * @throws InterruptedException if the tput sub-process gets interrupted
+     * @throws IOException if anything goes wrong
+     */
     public static int runTput(String s) throws InterruptedException, IOException {
         Process proc = new ProcessBuilder()
                 .command("tput", s)

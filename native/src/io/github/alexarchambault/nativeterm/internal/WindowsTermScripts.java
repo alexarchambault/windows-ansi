@@ -1,8 +1,11 @@
 package io.github.alexarchambault.nativeterm.internal;
 
-import java.io.IOException;
-
+/**
+ * PowerShell scripts to interact with the terminal on Windows
+ */
 public final class WindowsTermScripts {
+
+    private WindowsTermScripts() {}
 
     static boolean isWindows;
 
@@ -13,6 +16,9 @@ public final class WindowsTermScripts {
     }
 
     // adapted from https://github.com/rprichard/winpty/blob/7e59fe2d09adf0fa2aa606492e7ca98efbc5184e/misc/ConinMode.ps1
+    /**
+     * Script to enable ANSI output
+     */
     public static String enableAnsiScript =
             "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8\n" +
             "$signature = @'\n" +
@@ -45,6 +51,9 @@ public final class WindowsTermScripts {
             "    throw \"SetConsoleMode failed (is stdin a console?)\"\n" +
             "}\n";
 
+    /**
+     * Script to get the terminal size
+     */
     public static String getConsoleDimScript =
             "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8\n" +
             "$signature = @\"\n" +
