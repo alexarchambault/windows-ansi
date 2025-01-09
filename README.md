@@ -3,7 +3,7 @@
 [![Build status](https://github.com/alexarchambault/native-terminal/workflows/CI/badge.svg)](https://github.com/alexarchambault/native-terminal/actions?query=workflow%3ACI)
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.alexarchambault.native-terminal/native-terminal.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.alexarchambault.native-terminal/native-terminal)
 
-*native-terminal* is a small Java library to setup / interact with a terminals in a native fashion. It allows to
+*native-terminal* is a small Java library to setup / interact with terminals in a native fashion. It allows to
 - query the terminal size, and
 - on Windows, change the console mode so that it accepts ANSI escape codes.
 
