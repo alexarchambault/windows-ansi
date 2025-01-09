@@ -10,13 +10,13 @@ import mill.scalalib.publish._
 trait WindowsAnsiPublishModule extends PublishModule with Mima {
   def pomSettings = PomSettings(
     description = artifactName(),
-    organization = "io.github.alexarchambault.windows-ansi",
-    url = "https://github.com/alexarchambault/windows-ansi",
+    organization = "io.github.alexarchambault.native-terminal",
+    url = "https://github.com/alexarchambault/native-terminal",
     licenses = Seq(
       License.`Apache-2.0`,
       License.`GPL-2.0-with-classpath-exception`
     ),
-    versionControl = VersionControl.github("alexarchambault", "windows-ansi"),
+    versionControl = VersionControl.github("alexarchambault", "native-terminal"),
     developers = Seq(
       Developer("alexarchambault", "Alex Archambault", "https://github.com/alexarchambault")
     )
@@ -60,16 +60,17 @@ trait WindowsAnsiPublishModule extends PublishModule with Mima {
   }
 }
 
-object jni extends JavaModule with WindowsAnsiPublishModule {
-  def artifactName = "windows-ansi"
+object native extends JavaModule with WindowsAnsiPublishModule {
+  def artifactName = "native-terminal"
   def ivyDeps = Agg(
+    ivy"io.github.alexarchambault:is-terminal:0.1.1",
     ivy"org.fusesource.jansi:jansi:2.4.1"
   )
 }
 
-object `jni-graalvm` extends JavaModule with WindowsAnsiPublishModule {
-  def moduleDeps = Seq(jni)
-  def artifactName = "windows-ansi-graalvm"
+object `native-graalvm` extends JavaModule with WindowsAnsiPublishModule {
+  def moduleDeps = Seq(native)
+  def artifactName = "native-terminal-graalvm"
   def pomSettings = super.pomSettings().copy(
     licenses = Seq(License.`GPL-2.0-with-classpath-exception`)
   )
@@ -84,8 +85,8 @@ object `jni-graalvm` extends JavaModule with WindowsAnsiPublishModule {
   }
 }
 
-object ps extends JavaModule with WindowsAnsiPublishModule {
-  def artifactName = "windows-ansi-ps"
+object fallbacks extends JavaModule with WindowsAnsiPublishModule {
+  def artifactName = "native-terminal-fallbacks"
   def mimaPreviousVersions = {
     val publishedSince = coursier.core.Version("0.0.2")
     super.mimaPreviousVersions().dropWhile { v =>

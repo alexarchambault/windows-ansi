@@ -54,7 +54,8 @@ final class NativeImageFeature implements Feature {
     private static final List<String> JNI_CLASS_NAMES = Arrays.asList(
             "org.fusesource.jansi.internal.CLibrary",
             "org.fusesource.jansi.internal.CLibrary$WinSize",
-            "org.fusesource.jansi.internal.CLibrary$Termios",
+            "org.fusesource.jansi.internal.CLibrary$Termios");
+    private static final List<String> WINDOWS_JNI_CLASS_NAMES = Arrays.asList(
             "org.fusesource.jansi.internal.Kernel32",
             "org.fusesource.jansi.internal.Kernel32$SMALL_RECT",
             "org.fusesource.jansi.internal.Kernel32$COORD",
@@ -70,14 +71,19 @@ final class NativeImageFeature implements Feature {
     @Override
     public void beforeAnalysis(BeforeAnalysisAccess access) {
 
-        if (Platform.includedIn(Platform.WINDOWS.class)) {
+        /*
+         * Each listed class has a native method named "init" that initializes all declared
+         * fields of the class using JNI. So when the "init" method gets reachable (which means
+         * the class initializer got reachable), we need to register all fields for JNI access.
+         */
+        JNI_CLASS_NAMES.stream()
+                .map(access::findClassByName)
+                .filter(Objects::nonNull)
+                .map(jniClass -> ReflectionUtil.lookupMethod(jniClass, "init"))
+                .forEach(initMethod -> access.registerReachabilityHandler(a -> registerJNIFields(initMethod), initMethod));
 
-            /*
-             * Each listed class has a native method named "init" that initializes all declared
-             * fields of the class using JNI. So when the "init" method gets reachable (which means
-             * the class initializer got reachable), we need to register all fields for JNI access.
-             */
-            JNI_CLASS_NAMES.stream()
+        if (Platform.includedIn(Platform.WINDOWS.class)) {
+            WINDOWS_JNI_CLASS_NAMES.stream()
                     .map(access::findClassByName)
                     .filter(Objects::nonNull)
                     .map(jniClass -> ReflectionUtil.lookupMethod(jniClass, "init"))
@@ -85,7 +91,7 @@ final class NativeImageFeature implements Feature {
         }
     }
 
-    private AtomicBoolean resourceRegistered = new AtomicBoolean();
+    private final AtomicBoolean resourceRegistered = new AtomicBoolean();
 
     private void registerJNIFields(Method initMethod) {
         Class<?> jniClass = initMethod.getDeclaringClass();
@@ -93,11 +99,28 @@ final class NativeImageFeature implements Feature {
 
         if (!resourceRegistered.getAndSet(true)) {
             /* The native library that is included as a resource in the .jar file. */
-            String resource = "META-INF/native/windows64/jansi.dll";
-            InputStream is = jniClass.getClassLoader().getResourceAsStream(resource);
-            if (is == null)
-                throw new RuntimeException("Could not find resource " + resource);
-            Resources.registerResource(resource, is);
+            String resource = null;
+            if (Platform.includedIn(Platform.WINDOWS_AMD64.class))
+                resource = "Windows/x86_64/jansi.dll";
+            else if (Platform.includedIn(Platform.WINDOWS_AARCH64.class))
+                // FIXME File name should be changed to jansi.dll in the upcoming jansi version
+                resource = "Windows/arm64/libjansi.so";
+            else if (Platform.includedIn(Platform.LINUX_AMD64.class))
+                resource = "Linux/x86_64/libjansi.so";
+            else if (Platform.includedIn(Platform.LINUX_AARCH64.class))
+                resource = "Linux/arm64/libjansi.so";
+            else if (Platform.includedIn(Platform.DARWIN_AMD64.class))
+                resource = "Mac/x86_64/libjansi.jnilib";
+            else if (Platform.includedIn(Platform.DARWIN_AARCH64.class))
+                resource = "Mac/arm64/libjansi.jnilib";
+
+            if (resource != null) {
+                resource = "org/fusesource/jansi/internal/native/" + resource;
+                InputStream is = jniClass.getClassLoader().getResourceAsStream(resource);
+                if (is == null)
+                    throw new RuntimeException("Could not find resource " + resource);
+                Resources.registerResource(resource, is);
+            }
         }
     }
 }
