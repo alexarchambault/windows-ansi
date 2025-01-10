@@ -34,7 +34,10 @@ public final class ScriptRunner {
                 "-NoProfile",
                 "-NonInteractive",
                 "-EncodedCommand", encodedScript);
-        builder.inheritIO();
+        builder
+                .redirectOutput(ProcessBuilder.Redirect.PIPE)
+                .redirectInput(ProcessBuilder.Redirect.INHERIT)
+                .redirectError(ProcessBuilder.Redirect.INHERIT);
 
         Process proc = builder.start();
 
