@@ -32,7 +32,7 @@ public final class WindowsTermScripts {
             "public static extern uint SetConsoleMode(\n" +
             "    IntPtr hConsoleHandle,\n" +
             "    uint dwMode);\n" +
-            "public const int STD_OUTPUT_HANDLE = -11;\n" +
+            "public const int STD_ERROR_HANDLE = -12;\n" +
             "public const int ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004;\n" +
             "'@\n" +
             "\n" +
@@ -40,15 +40,18 @@ public final class WindowsTermScripts {
             "    -Name WinAPI -Namespace ConinModeScript `\n" +
             "    -PassThru\n" +
             "\n" +
-            "$handle = $WinAPI::GetStdHandle($WinAPI::STD_OUTPUT_HANDLE)\n" +
+            "$handle = $WinAPI::GetStdHandle($WinAPI::STD_ERROR_HANDLE)\n" +
             "$mode = 0\n" +
             "$ret = $WinAPI::GetConsoleMode($handle, [ref]$mode)\n" +
             "if ($ret -eq 0) {\n" +
-            "    throw \"GetConsoleMode failed (is stdin a console?)\"\n" +
-            "}\n" +
-            "$ret = $WinAPI::SetConsoleMode($handle, $mode -bor $WinAPI::ENABLE_VIRTUAL_TERMINAL_PROCESSING)\n" +
-            "if ($ret -eq 0) {\n" +
-            "    throw \"SetConsoleMode failed (is stdin a console?)\"\n" +
+            "    Write-Host \"Error: GetConsoleMode failed (is stderr a console?)\"\n" +
+            "} else {\n" +
+            "    $ret = $WinAPI::SetConsoleMode($handle, $mode -bor $WinAPI::ENABLE_VIRTUAL_TERMINAL_PROCESSING)\n" +
+            "    if ($ret -eq 0) {\n" +
+            "        Write-Host \"false\"\n" +
+            "    } else {\n" +
+            "        Write-Host \"true\"\n" +
+            "    }\n" +
             "}\n";
 
     /**
@@ -68,7 +71,7 @@ public final class WindowsTermScripts {
             "    [DllImport(\"kernel32.dll\", SetLastError = true)]\n" +
             "    public static extern IntPtr GetStdHandle(int nStdHandle);\n" +
             "\n" +
-            "    public const int STD_OUTPUT_HANDLE = -11;\n" +
+            "    public const int STD_ERROR_HANDLE = -12;\n" +
             "\n" +
             "    [StructLayout(LayoutKind.Sequential)]\n" +
             "    public struct COORD\n" +
@@ -100,14 +103,14 @@ public final class WindowsTermScripts {
             "\n" +
             "Add-Type -TypeDefinition $signature -Language CSharp\n" +
             "\n" +
-            "$outputHandle = [Kernel32]::GetStdHandle([Kernel32]::STD_OUTPUT_HANDLE)\n" +
+            "$outputHandle = [Kernel32]::GetStdHandle([Kernel32]::STD_ERROR_HANDLE)\n" +
             "\n" +
             "$info = New-Object Kernel32+CONSOLE_SCREEN_BUFFER_INFO\n" +
             "\n" +
             "if ([Kernel32]::GetConsoleScreenBufferInfo($outputHandle, [ref]$info)) {\n" +
             "    Write-Host \"Size: $($info.srWindow.Right - $info.srWindow.Left + 1) $($info.srWindow.Bottom - $info.srWindow.Top + 1)\"\n" +
             "} else {\n" +
-            "    Write-Host \"Error: \" + [System.Runtime.InteropServices.Marshal]::GetLastWin32Error()\n" +
+            "    Write-Host \"Error: Win32 error $([System.Runtime.InteropServices.Marshal]::GetLastWin32Error())\"\n" +
             "}\n";
 
 }

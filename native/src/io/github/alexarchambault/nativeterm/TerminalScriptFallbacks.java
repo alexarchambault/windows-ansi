@@ -11,9 +11,9 @@ import static io.github.alexarchambault.nativeterm.NativeTerminal.isWindows;
 /**
  * Methods to query the terminal size and enable ANSI output in it like in {@link NativeTerminal}
  */
-public final class NativeTerminalFallbacks {
+public final class TerminalScriptFallbacks {
 
-    private NativeTerminalFallbacks() {}
+    private TerminalScriptFallbacks() {}
 
     /**
      * Gets the terminal size
