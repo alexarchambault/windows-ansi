@@ -50,6 +50,26 @@ int width = size.getWidth();
 int height = size.getHeight();
 ```
 
+If you call this method often, on Unix-es, you might want to use `TerminalSizeCache` instead.
+
+```java
+import io.github.alexarchambault.nativeterm.TerminalSize;
+import io.github.alexarchambault.nativeterm.TerminalSizeCache;
+
+TerminalSize size = TerminalSizeCache.size();
+int width = size.getWidth();
+int height = size.getHeight();
+```
+
+On Unix-es, `TerminalSizeCache` registers a handler for the WINCH signal, that invalidates
+the cached terminal size. That way, the terminal size is queried only when the terminal size
+changes, or if it's not cached yet (or the cached value has been invalidated).
+If the terminal size didn't change, the cached value is returned, and no unnecessary system call
+querying the terminal size is made.
+
+On Windows, this class just calls `NativeTerminal.size()` upon every call to
+`TerminalSizeCache.size()`.
+
 ## License
 
 All files in this repository, except `NativeImageFeature.java`, can be used either under the
