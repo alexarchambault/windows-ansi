@@ -45,7 +45,7 @@ Calling this method is safe on other platforms. It simply returns true in that c
 import io.github.alexarchambault.nativeterm.NativeTerminal;
 import io.github.alexarchambault.nativeterm.TerminalSize;
 
-TerminalSize size = NativeTerminal.size();
+TerminalSize size = NativeTerminal.getSize();
 int width = size.getWidth();
 int height = size.getHeight();
 ```
