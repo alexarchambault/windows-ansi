@@ -7,6 +7,10 @@ import mill._
 import mill.scalalib._
 import mill.scalalib.publish._
 
+import java.util.Locale
+
+import scala.util.Properties
+
 trait WindowsAnsiPublishModule extends PublishModule with Mima {
   def pomSettings = PomSettings(
     description = artifactName(),
@@ -39,9 +43,39 @@ trait WindowsAnsiPublishModule extends PublishModule with Mima {
     else value
   }
 
-  def javacOptions = super.javacOptions() ++ Seq(
-    "--release", "8"
-  )
+  private def isArm64 =
+    Option(System.getProperty("os.arch")).map(_.toLowerCase(Locale.ROOT)) match {
+      case Some("aarch64" | "arm64") => true
+      case _                         => false
+    }
+  def javacSystemJvmId = T {
+    if (Properties.isMac && isArm64) "zulu:8"
+    else "adoptium:8"
+  }
+  def javacSystemJvm = T.source {
+    val output = os.proc("cs", "java-home", "--jvm", javacSystemJvmId())
+      .call(cwd = T.workspace)
+      .out.trim()
+    val javaHome = os.Path(output)
+    assert(os.isDir(javaHome))
+    PathRef(javaHome, quick = true)
+  }
+  // adds options equivalent to --release 8 + allowing access to unsupported JDK APIs
+  // (no more straightforward options to achieve that AFAIK)
+  def maybeJdk8JavacOpt = T {
+    val javaHome   = javacSystemJvm().path
+    val rtJar      = javaHome / "jre/lib/rt.jar"
+    val hasModules = os.isDir(javaHome / "jmods")
+    val hasRtJar   = os.isFile(rtJar)
+    assert(hasModules || hasRtJar)
+    if (hasModules)
+      Seq("--system", javaHome.toString)
+    else
+      Seq("-source", "8", "-target", "8", "-bootclasspath", rtJar.toString)
+  }
+  def javacOptions = T {
+    super.javacOptions() ++ maybeJdk8JavacOpt()
+  }
 
   def mimaPreviousVersions: T[Seq[String]] = T.input {
     val current = os.proc("git", "describe", "--tags", "--match", "v*")
